@@ -1,0 +1,316 @@
+* { 
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display:flex;
+    background-color: rgb(109, 221, 92);
+    padding: 10px; /* keep a 10px inner margin */
+    position: relative;
+    min-height: 100vh;
+}
+aside {
+    margin: 20px;
+    padding: 10px;
+    box-sizing: border-box;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 24px;
+    font-weight: bold;
+    color: #162527;
+}
+
+/* body inset (leave 10px margin); background will be placed inside .hero-image */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 10px; /* leaves a 10px margin on all sides */
+    z-index: -2; /* keep behind content */
+    pointer-events: none;
+} 
+
+/* Header / subtitle styles — HERO full viewport width */
+.hero {
+    width: calc(100% - 20px); /* respect body's 10px padding on both sides */
+    max-width: none;
+    margin: 10px auto;
+    padding: 0; /* keep inner content flush */
+    color: #ffffff;
+
+    min-height: 70vh; /* reduced hero height for contain mode */
+    position: relative;
+    z-index: 1;
+
+    background-color: transparent; /* let body background show around hero */
+    border-radius: 8px; /* slight rounding to reveal background around edges */
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} 
+
+/* place image using contain so whole image is visible; allow it to be wider */
+.hero-img {
+    display: block;
+    max-width: 100%;
+    width: auto;
+    height: 70vh; /* keep image less tall so it can be wider */
+    object-fit: contain; /* show full image inside area */
+    object-position: center center;
+    margin: 0 auto;
+    border-radius: 0;
+    box-shadow: none;
+    background-color: transparent;
+} 
+
+/* fallback for smaller viewports: limit height for usability */
+@media (max-width: 1024px) {
+    .hero-img { height: 60vh; }
+}
+
+@media (max-width: 640px) {
+    .hero-img { height: 50vh; }
+}
+
+/* subtle darkening layer removed for fully visible image */
+.hero::before {
+    display: none;
+}
+
+/* remove decorative left panel (not needed for image-only layout) */
+.hero::after {
+    display: none;
+} 
+
+/* content layer inside hero */
+.hero-content {
+    position: relative;
+    height: 100%;
+    z-index: 1;
+
+    display: flex; /* center text vertically and align on the left */
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* previous absolute overlay removed — using rhomboid panel implementation further down */
+
+
+/* Headline styling */
+.hero h1 {
+    font-family: 'Oswald', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    font-size: 1.6rem; /* reduced for guaranteed fit and readability */
+    line-height: 1.08;
+    margin: 0 0 10px 0;
+    font-weight: 700;
+    letter-spacing: -0.4px;
+    color: #fff;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.6);
+
+    /* solid badge behind headline to ensure legibility */
+    display: inline-block;
+    background: rgba(0,0,0,0.96); /* nearly opaque */
+    padding: 8px 12px;
+    border-radius: 4px;
+    max-width: 100%;
+    overflow-wrap: break-word;
+} 
+
+.subtitle {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    font-style: italic;
+    color: rgba(255,255,255,0.95);
+    margin: 0 0 18px 0;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.45);
+}
+
+/* CTA */
+.cta {
+    display: inline-block;
+    background: #ffb300;
+    color: #071010;
+    padding: 12px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(255,179,0,0.18);
+}
+
+/* Medium screens */
+@media (max-width: 900px) {
+    .hero { width: 90vw; min-height: 64vh; }
+    .hero-text { width: 48%; left: 4%; padding: 28px; }
+    .hero h1 { font-size: 2.6rem; }
+}
+
+/* Small screens: stack image and text, allow scrolling inside text */
+@media (max-width: 640px) {
+    .hero { width: calc(100vw - 20px); min-height: 50vh; }
+    .hero-text {
+        position: static;
+        transform: none;
+        width: auto;
+        margin: 0 auto;
+        padding: 20px;
+        border-left: none;
+        background: rgba(0,0,0,0.8);
+        max-height: 260px;
+        overflow-y: auto; /* only enable scrolling here */
+    }
+    .hero h1 { font-size: 1.9rem; }
+    .hero h1 { display: inline-block; background: none; padding: 0; border-radius: 0; text-shadow: 0 6px 20px rgba(0,0,0,0.6);} 
+}
+
+/* inner row: image + text */
+.hero-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 32px;
+} 
+
+/* image column */
+.hero-image {
+    flex: 1 1 auto;
+    min-width: 0; /* allow shrinking */
+    min-height: 60vh;
+    background-image: url('./images/kokom.svg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain; /* show full image inside its column */
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #071210;
+}
+
+/* side text box: rhomboid panel (using ::before) */
+.hero-text {
+    position: relative;
+    flex: 0 0 420px; /* slightly wider */
+    width: 420px;
+    max-height: none; /* no scroll on large screens */
+    overflow: visible;
+
+    margin-left: 6%; /* ensure it sits well inside the dark panel */
+    color: #fff;
+    padding: 32px 44px 32px 36px; /* more right padding to avoid slanted edge */
+    border-radius: 8px;
+    text-align: left;
+    z-index: 2;
+}
+
+/* decorative rhomboid background so text area has a slanted edge */
+.hero-text::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.46) 100%);
+    clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%); /* rhomboid */
+    z-index: -1;
+    box-shadow: 0 12px 36px rgba(0,0,0,0.5);
+    border-left: 6px solid #a41d58;
+    border-radius: 8px;
+}
+
+/* ensure inline elements render above the decorative background */
+.hero-text h1,
+.hero-text .subtitle,
+.hero-text .cta {
+    position: relative;
+    z-index: 2;
+}
+
+.hero h1 {
+    font-size: 2.75rem; /* vergrößert */
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.5px;
+    color: #ffffff;
+}
+
+.subtitle {
+    font-size: 1.125rem; /* vergrößert */
+    line-height: 1.6;
+    font-style: italic;
+    color: rgba(230,246,242,0.95);
+    margin: 0;
+}
+
+/* Medium screens: give text a bit more room */
+@media (max-width: 900px) {
+    .hero-inner {
+        gap: 18px;
+    }
+    .hero-image {
+        background-size: cover;
+    }
+    .hero-text {
+        flex: 0 0 45%;
+        width: 45%;
+        padding: 18px;
+        max-height: none;
+        overflow: visible;
+    }
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero-inner {
+        display: block;
+    }
+    .hero-image {
+        width: 100%;
+        min-height: 40vh;
+        background-size: cover;
+        margin-bottom: 16px;
+    }
+    .hero-text {
+        width: auto;
+        max-height: 260px; /* allow limited height on small screens */
+        overflow-y: auto; /* enable scrolling on small screens only */
+        margin: 0 auto;
+        padding: 20px;
+    }
+    /* disable rhomboid decoration on very small screens for full-width readability */
+    .hero-text::before {
+        clip-path: none;
+        border-left: none;
+        background: rgba(0,0,0,0.7);
+        border-radius: 8px;
+    }
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 640px) {
+    .hero {
+        background-size: 100% auto;
+        background-position: center top;
+        padding: 24px;
+        min-height: auto;
+        text-align: center;
+    }
+    .hero-text {
+        position: static;
+        transform: none;
+        margin: 0 auto;
+        width: auto;
+        background: rgba(6,10,12,0.85); /* halbtransparent auf kleinen Bildschirmen */
+        padding: 16px;
+        border-radius: 8px;
+        color: #eef8f6;
+    }
+    .hero h1 {
+        font-size: 2.25rem;
+    }
+    .subtitle {
+        margin-top: 8px;
+        font-size: 1.0625rem;
+    }
+}
+
+/* No headline in image-only layout; hide hero text where present */
+.hero h1 { display: none !important; }
+.hero-text { display: none !important; }
